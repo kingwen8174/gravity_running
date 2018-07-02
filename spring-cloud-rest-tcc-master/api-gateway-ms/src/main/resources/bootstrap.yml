@@ -1,0 +1,47 @@
+## SERVER
+server:
+  port: 7291
+management:
+  port: 10211
+  context-path: '/fb83deee-dd46-472b-99a9-f0ebffe20d0e'
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://eureka1:8763/eureka/,http://eureka2:8762/eureka/'
+  instance:
+    metadata-map:
+      cluster: prontera
+      management:
+        port: ${management.port}
+        context-path: ${management.context-path}
+      health:
+        path: /health
+    status-page-url-path: /info
+    health-check-url-path: /health
+    prefer-ip-address: false
+spring:
+  application:
+    name: gateway
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true
+  zipkin:
+    base-url: 'http://zipkin_server:9411/'
+ribbon:
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 3
+  OkToRetryOnAllOperations: true
+  ConnectTimeout: 60000
+  ReadTimeout: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
